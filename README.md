@@ -1,4 +1,4 @@
-# Pol emploie
+# L'épaule
 
 ## 1. configuration de la bdd : 
 la bdd 'login' contient 4 tables :
