@@ -27,6 +27,7 @@
 <body>
 <form action="" method="post">
     <button name="login">login</button> 
+    <button name="register">register</button>
 </form>
 
     
@@ -34,8 +35,13 @@
 </html>
 
 <?php
+
 if (isset($_POST['login'])){
-    header('Location: login.php');
+    header('Location: ./login.php');
+    exit();
+}
+if (isset($_POST['register'])){
+    header('Location: register.php');
     exit();
 }
 ?>
