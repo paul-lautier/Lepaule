@@ -43,6 +43,8 @@ if (is_connected()){
     header('Location: ./admin/home_admin.php');
 }
 
+
+
 if (!empty($_POST['username']) && !empty($_POST['password'])){
     if ($query_verif_user->rowCount()>0 && $query_verif_admin->rowCount() == 0){
         session_start();
@@ -57,11 +59,11 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
         exit;
 
     }
-    elseif ($query_verif_user->rowCount() == 0 || $query_verif_admin->rowCount() == 0){
+    elseif ($query_verif_user->rowCount() == 0 && $query_verif_admin->rowCount() == 0){
         echo "<script type='text/javascript'>alert(l identifiant et le mot de passe ne correspondent pas);</script>";
+        echo "<script type='text/javascript'>alert('l\'identifiant et le mot de passe ne correspondent pas');</script>";
     }
 }
-
 
 
 ?>
@@ -77,7 +79,14 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
 <form action="" method="post">
         <input type="username" placeholder="username" name ="username">
         <input type="password"placeholder="password" name="password">
-        <button action="submit" name="connexion">login</button>
+        <button action="submit" name="connexion">login</button><br>
+        <button name="home">home</button>
     </form>
 </body>
 </html>
+
+<?php 
+
+if (isset($_POST['home'])){
+    header('Location: index.php');
+}

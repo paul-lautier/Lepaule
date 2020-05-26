@@ -45,11 +45,13 @@ $pdo = new PDO(
   	
   	  <input type="password" name="password_2" placeholder="Verify Password"><br>
 
-  	  <button type="submit" name="connexion">create account</button>
+	  <button type="submit" name="connexion">create account</button><br>
+	
+	  <button name="home">home</button> 
 
   	
 	</form>
-	<a href="./index.php">home</a>
+	
 		
 	</body>
 </html>
@@ -97,5 +99,9 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["birthda
         $_SESSION['connected'] = $username;
 		header('Location: ./users/home_users.php');
 	}
+}
+
+if (isset($_POST['home'])){
+	header('Location: index.php');
 }
 ?>

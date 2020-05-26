@@ -4,7 +4,7 @@ session_start();
 
 $database_host = 'localhost';
 $database_port = '3306';
-$database_dbname = 'login';
+$database_dbname = 'lepaule';
 $database_user = 'root';
 $database_password = 'Paul@123';
 $database_charset = 'UTF8';
@@ -53,8 +53,27 @@ $email = $querry_get_info->fetch();
 
 
 
-<a href="./change_pass.php">changer son mot de passe</a><br>
-<a href="./sup_compte.php">supprimer votre compte</a>
+    <form action="" method="post">
+        <button name="change_pass">changer son mot de passe</button>
+        <button name="sup_compte">supprimer votre compte</button>
+        <button name="home">home</button>
+
+    </form>
+<a href="./change_pass.php"></a><br>
+<a href="./sup_compte.php"></a>
     
 </body>
 </html>
+
+<?php
+if (isset($_POST['change_pass'])){
+    header('Location: change_pass.php');
+}
+
+if (isset($_POST['sup_compte'])){
+    header('Location: sup_compte.php');
+}
+if (isset($_POST['home'])){
+    header('Location: home_users.php');
+}
+?>

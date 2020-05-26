@@ -10,7 +10,7 @@ if (!is_connected()){
 
 $database_host = 'localhost';
 $database_port = '3306';
-$database_dbname = 'login';
+$database_dbname = 'lepaule';
 $database_user = 'root';
 $database_password = 'Paul@123';
 $database_charset = 'UTF8';
@@ -80,6 +80,7 @@ if (isset($_POST["old_pass"]) && isset($_POST["new_pass"]) && isset($_POST["new_
         $querry_change_info->bindparam(":old_pass", $old_pass);
         $querry_change_info->execute();
         echo "<script type='text/javascript'>alert('changement éffectué');</script>";
+        header('Location: profile_users.php');
         }
 
     }

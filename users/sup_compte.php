@@ -1,7 +1,7 @@
 <?php
 $database_host = 'localhost';
 $database_port = '3306';
-$database_dbname = 'login';
+$database_dbname = 'lepaule';
 $database_user = 'root';
 $database_password = 'Paul@123';
 $database_charset = 'UTF8';
