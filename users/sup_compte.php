@@ -52,11 +52,10 @@ $username = $_SESSION['connected']
 
 
 if (isset($_POST['delete'])){
-    $querry_delete = $pdo->prepare("DELETE FROM companies where username = :username");
+    $querry_delete = $pdo->prepare("DELETE FROM users where username = :username");
     $querry_delete->bindParam(':username',$username);
     $querry_delete->execute();
     deconnect();
     header('Location: ../index.php');
-    exit;
 }
 ?>

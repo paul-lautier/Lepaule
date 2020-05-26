@@ -1,10 +1,4 @@
 <?php
-
-require '../function/connexion_test.php';
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 $database_host = 'localhost';
 $database_port = '3306';
 $database_dbname = 'login';
@@ -40,22 +34,23 @@ $pdo = new PDO(
 	<form method="post">
 
 
-  	 
-  	  <input type="text" name="username" placeholder="nom de l'entreprise"><br>
+  	  <label>nom utilisateur</label>
+  	  <input type="text" name="username" >
   	
 
-  	  
-  	  <input type="email" name="email" placeholder="Email"><br>
+  	  <label>Email</label>
+  	  <input type="email" name="email">
   	
 
-  	  
-  	  <input type="password" name="password_1" placeholder="mot de passe"><br>
+  	  <label>mot de passe</label>
+  	  <input type="password" name="password_1">
   	
 
-  	  <input type="password" name="password_2" placeholder="confirmer mot de passe"><br>
+  	  <label> confirmer mot de passe</label>
+  	  <input type="password" name="password_2">
   	
 
-  	  <button type="submit" name="connexion">se connecter </button><br>
+  	  <button type="submit" name="connexion">se connecter </button>
 
   	
 	</form>
@@ -65,17 +60,17 @@ $pdo = new PDO(
 </html>
 
 <?php
-if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password_1"])&&isset($_POST["password_2"])){
+if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password_1"]) && isset($_POST["password_2"])){
 	$username = htmlspecialchars($_POST["username"]);
 	$email = htmlspecialchars($_POST["email"]);
 	$password = htmlspecialchars($_POST["password_1"]);
 	$password_test = htmlspecialchars($_POST['password_2']);
 
-	$query_verif_user = $pdo->prepare("select username from companies where username = ?");
+	$query_verif_user = $pdo->prepare("select username from users where username = ?");
 	$query_verif_user->execute([$username]);
 
 	
-	$query_verif_mail = $pdo->prepare("select email from companies where email = ?");
+	$query_verif_mail = $pdo->prepare("select email from users where email = ?");
 	$query_verif_mail->execute([$email]);
 
 	if ($password !== $password_test) {
@@ -93,16 +88,14 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
 	
 	else {
 		$password = md5($password);
-		$query_add = $pdo->prepare("INSERT INTO companies (username, email, password) VALUES(:username, :email, :password)");
+		$query_add = $pdo->prepare("INSERT INTO users (username, email, password) VALUES(:username, :email, :password)");
 		$query_add->bindparam(":username", $username);
 		$query_add->bindparam(":email", $email);
 		$query_add->bindparam(":password", $password);
 		$query_add->execute();
-		header('Location: ./home_donneur.php');
+		session_start();
+        $_SESSION['connected'] = $username;
+		header('Location: home_demandeur.php');
 	}
 }
-	
-
-
-
 ?>

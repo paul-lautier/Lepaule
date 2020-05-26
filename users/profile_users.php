@@ -1,10 +1,4 @@
 <?php
-require '../function/connexion_test.php';
-
-if (!is_connected()){
-    header('Location: connexion.php');
-}
-
 session_start();
 
 
@@ -29,25 +23,36 @@ $pdo = new PDO(
     $database_options
 );
 
+require '../function/connexion_test.php';
+
+if (!is_connected()){
+    header('Location: connexion.php');
+}
 $username = $_SESSION['connected'];
 
-$querry_get_info = $pdo->prepare("SELECT email FROM companies WHERE username = :username");
+$querry_get_info = $pdo->prepare("SELECT email FROM users WHERE username = :username");
 $querry_get_info->bindParam(':username',$username);
 $querry_get_info->execute();
 $email = $querry_get_info->fetch();
 ?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pol Emploie</title>
 </head>
 <body>
+    nom d'utilisateur : <?php echo $username?><br>
+    addresse email : <?php echo implode($email)?><br>
 
-nom d'utilisateur : <?php echo $username?><br>
-addresse email : <?php echo implode($email)?><br>
+
+
 <a href="./change_pass.php">changer son mot de passe</a><br>
 <a href="./sup_compte.php">supprimer votre compte</a>
     

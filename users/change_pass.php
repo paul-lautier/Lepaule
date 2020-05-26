@@ -1,12 +1,11 @@
 <?php
-
+session_start();
 
 require '../function/connexion_test.php';
 
 if (!is_connected()){
     header('Location: ../connexion.php');
 }
-session_start();
 
 
 $database_host = 'localhost';
@@ -57,7 +56,7 @@ if (isset($_POST["old_pass"]) && isset($_POST["new_pass"]) && isset($_POST["new_
     
    
 
-    $query_verif_old_pass = $pdo->prepare("SELECT password from companies where password = :password");
+    $query_verif_old_pass = $pdo->prepare("SELECT password from users where password = :password");
     $query_verif_old_pass->bindParam(':password',$old_pass);
     $query_verif_old_pass->execute();
 
@@ -76,7 +75,7 @@ if (isset($_POST["old_pass"]) && isset($_POST["new_pass"]) && isset($_POST["new_
     else{
         
 
-        $querry_change_info = $pdo->prepare("UPDATE companies SET password = :password WHERE password = :old_pass");
+        $querry_change_info = $pdo->prepare("UPDATE users SET password = :password WHERE password = :old_pass");
         $querry_change_info->bindparam(":password", $new_pass);
         $querry_change_info->bindparam(":old_pass", $old_pass);
         $querry_change_info->execute();

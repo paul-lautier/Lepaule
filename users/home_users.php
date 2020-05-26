@@ -6,7 +6,6 @@ if (!is_connected()){
     header('Location: ../connexion.php');
 
 }
-session_start();
 ?>
 
 <!doctype html>
@@ -19,24 +18,16 @@ session_start();
 </head>
 <body>
 
-
     <form action="" method="post">
         <button name="logout">log out</button>
     </form>
 
     <form action="" method="post">
-        <button name="offres_depose">déposer une offre</button>
-    </form>
-
-    <form action="" method="post">
-        <button name="offres_voir">voir vos offres</button>
-    </form>
-
-    <form action="" method="post">
         <button name="profile">accéder à votre profil</button>
     </form>
+
     <form action="" method="post">
-            <button name="suppr_offre">supprimer offre</button>
+        <button name="voir_offres">voirs les offres</button>
     </form>
 </body>
 </html>
@@ -47,18 +38,12 @@ if (isset($_POST['logout'])){
     header('Location: ../index.php');
 }
 
-if (isset($_POST['offres_voir'])){
-    header('Location: voir_offres.php');
-}
 
 if (isset($_POST['profile'])){
-    header('Location: profile_donneur.php');
+    header('Location: profile_demandeur.php');
 }
 
-if (isset($_POST['offres_depose'])){
-    header('Location: depose_offres.php');
-}
-if (isset($_POST['suppr_offre'])){
-    header('Location: del_offre.php');
+if (isset($_POST['voir_offres'])){
+    header('Location: voir_offres.php');
 }
 ?>
