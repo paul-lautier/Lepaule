@@ -3,7 +3,7 @@
 <?php
 $database_host = 'localhost';
 $database_port = '3306';
-$database_dbname = 'login';
+$database_dbname = 'lepaule';
 $database_user = 'root';
 $database_password = 'Paul@123';
 $database_charset = 'UTF8';
@@ -29,22 +29,35 @@ if (isset ($_POST["connexion"])){
     $password = htmlspecialchars(md5($_POST["password"]));
 }
 
-$query_verif = $pdo->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
-$query_verif->execute([$username,$password]);
+$query_verif_user = $pdo->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
+$query_verif_user->bindParam(':username',$username);
+$query_verif_user->bindParam(':password',$password);
+$query_verif_user->execute();
+
+$query_verif_admin = $pdo->prepare('SELECT * FROM admins WHERE username = :username AND password = :password');
+$query_verif_admin->bindParam(':username',$username);
+$query_verif_admin->bindParam(':password',$password);
+$query_verif_admin->execute();
 
 if (is_connected()){
-    header('Location: ./home_demandeur.php');
+    header('Location: ./admin/home_admin.php');
 }
 
 if (!empty($_POST['username']) && !empty($_POST['password'])){
-    if ($query_verif->rowCount()>0){
+    if ($query_verif_user->rowCount()>0 && $query_verif_admin->rowCount() == 0){
         session_start();
         $_SESSION['connected'] = $username;
-        header('Location: ./home_demandeur.php');
+        header('Location: ./users/home_users.php');
+        exit;
+    }
+    elseif ($query_verif_admin->rowCount() > 0 && $query_verif_user->rowCount() == 0){
+        session_start();
+        $_SESSION['connected'] = $username;
+        header('Location: ./admin/home_admin.php');
         exit;
 
     }
-    elseif ($query_verif->rowCount() == 0){
+    elseif ($query_verif_user->rowCount() == 0 || $query_verif_admin->rowCount() == 0){
         echo "<script type='text/javascript'>alert(l identifiant et le mot de passe ne correspondent pas);</script>";
     }
 }
@@ -64,7 +77,7 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
 <form action="" method="post">
         <input type="username" placeholder="username" name ="username">
         <input type="password"placeholder="password" name="password">
-        <button action="submit" name="connexion">se connecter</button>
+        <button action="submit" name="connexion">login</button>
     </form>
 </body>
 </html>

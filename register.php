@@ -1,7 +1,7 @@
 <?php
 $database_host = 'localhost';
 $database_port = '3306';
-$database_dbname = 'login';
+$database_dbname = 'lepaule';
 $database_user = 'root';
 $database_password = 'Paul@123';
 $database_charset = 'UTF8';
@@ -37,14 +37,13 @@ $pdo = new PDO(
 
   	  <input type="text" name="username" placeholder="Username"><br>
   	
+	  <input type="email" name="email" placeholder="Email"><br>
 
-  	  <input type="email" name="email" placeholder="Email"><br>
-  	
+	  <input type="date" name="birthdate" placeholder="date de naissance"><br>
+		
   	  <input type="password" name="password_1" placeholder="Password"><br>
   	
-
   	  <input type="password" name="password_2" placeholder="Verify Password"><br>
-  	
 
   	  <button type="submit" name="connexion">create account</button>
 
@@ -56,17 +55,19 @@ $pdo = new PDO(
 </html>
 
 <?php
-if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password_1"]) && isset($_POST["password_2"])){
+if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["birthdate"]) && isset($_POST["password_1"]) && isset($_POST["password_2"])){
 	$username = htmlspecialchars($_POST["username"]);
 	$email = htmlspecialchars($_POST["email"]);
+	$birthdate = htmlspecialchars($_POST["birthdate"]);
 	$password = htmlspecialchars($_POST["password_1"]);
 	$password_test = htmlspecialchars($_POST['password_2']);
 
-	$query_verif_user = $pdo->prepare("select username from users where username = ?");
+
+	$query_verif_user = $pdo->prepare("SELECT username from users where username = ?");
 	$query_verif_user->execute([$username]);
 
 	
-	$query_verif_mail = $pdo->prepare("select email from users where email = ?");
+	$query_verif_mail = $pdo->prepare("SELECT email from users where email = ?");
 	$query_verif_mail->execute([$email]);
 
 	if ($password !== $password_test) {
@@ -83,15 +84,18 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
 	}
 	
 	else {
+		$money = 0;
 		$password = md5($password);
-		$query_add = $pdo->prepare("INSERT INTO users (username, email, password) VALUES(:username, :email, :password)");
+		$query_add = $pdo->prepare("INSERT INTO users (username, email,birthdate, password,money) VALUES(:username, :email,:birthdate, :password,:money)");
 		$query_add->bindparam(":username", $username);
 		$query_add->bindparam(":email", $email);
+		$query_add->bindparam(":birthdate", $birthdate);
 		$query_add->bindparam(":password", $password);
+		$query_add->bindparam(":money", $money);
 		$query_add->execute();
 		session_start();
         $_SESSION['connected'] = $username;
-		header('Location: home_demandeur.php');
+		header('Location: ./users/home_users.php');
 	}
 }
 ?>
