@@ -22,13 +22,20 @@
 <head>
     <meta charset="UTF-8">
     <link href="style.css" rel="stylesheet">
-    <title>Pol emplhoi</title>
+    <title>L'épaule</title>
 </head>
 <body>
-<form action="connexion.php">
-    <button>espace connexion</button> 
+<form action="" method="post">
+    <button name="login">login</button> 
 </form>
 
     
 </body>
 </html>
+
+<?php
+if (isset($_POST['login'])){
+    header('Location : login.php');
+    exit();
+}
+?>
