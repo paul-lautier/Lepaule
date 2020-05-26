@@ -37,11 +37,11 @@
 <?php
 
 if (isset($_POST['login'])){
-    header('Location: ./login.php');
-    exit();
+    header('Location: login.php');
+    exit;
 }
 if (isset($_POST['register'])){
     header('Location: register.php');
-    exit();
+    exit;
 }
 ?>
