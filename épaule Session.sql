@@ -47,3 +47,12 @@ CREATE TABLE `reports`(
     `sub_id`int NOT NULL,
     `username_report` varchar(50) UNIQUE KEY
 )
+
+ALTER TABLE users ADD COLUMN birthdate datetime not null;
+
+
+ALTER TABLE users DROP birthdate;
+
+INSERT INTO admins (username, password, email) 
+VALUES  ('admin', '63a9f0ea7bb98050796b649e85481845', 'admin@root.com');
+
