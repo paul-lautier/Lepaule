@@ -31,7 +31,7 @@ $pdo = new PDO(
 	</head>
 	<body>
 
-	<form method="post">
+	<form action="" method="post">
 
 
 
@@ -52,11 +52,15 @@ $pdo = new PDO(
   	
 	</form>
 	
-		
 	</body>
 </html>
 
 <?php
+
+if (isset($_POST['home'])){
+	header('Location: index.php');
+}
+
 if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["birthdate"]) && isset($_POST["password_1"]) && isset($_POST["password_2"])){
 	$username = htmlspecialchars($_POST["username"]);
 	$email = htmlspecialchars($_POST["email"]);
@@ -87,12 +91,14 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["birthda
 	
 	else {
 		$money = 0;
+		$is_totp = 'non';
 		$password = md5($password);
-		$query_add = $pdo->prepare("INSERT INTO users (username, email,birthdate, password,money) VALUES(:username, :email,:birthdate, :password,:money)");
+		$query_add = $pdo->prepare("INSERT INTO users (username, email,birthdate, password,money,is_totp) VALUES(:username, :email, :birthdate, :password, :money, :is_totp)");
 		$query_add->bindparam(":username", $username);
 		$query_add->bindparam(":email", $email);
 		$query_add->bindparam(":birthdate", $birthdate);
 		$query_add->bindparam(":password", $password);
+		$query_add->bindparam(":is_totp", $is_totp);
 		$query_add->bindparam(":money", $money);
 		$query_add->execute();
 		session_start();
@@ -101,7 +107,5 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["birthda
 	}
 }
 
-if (isset($_POST['home'])){
-	header('Location: index.php');
-}
+
 ?>

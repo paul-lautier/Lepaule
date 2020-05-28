@@ -34,7 +34,6 @@ $username = $_SESSION['connected']
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pol Emploie</title>
 </head>
 <body>
@@ -48,9 +47,6 @@ $username = $_SESSION['connected']
 </html>
 
 <?php
-
-
-
 if (isset($_POST['delete'])){
     $querry_delete = $pdo->prepare("DELETE FROM users where username = :username");
     $querry_delete->bindParam(':username',$username);

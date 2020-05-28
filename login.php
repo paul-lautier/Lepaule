@@ -34,23 +34,46 @@ $query_verif_user->bindParam(':username',$username);
 $query_verif_user->bindParam(':password',$password);
 $query_verif_user->execute();
 
+$query_verif_totp = $pdo->prepare("SELECT is_totp FROM users WHERE username = :username AND password = :password");
+$query_verif_totp->bindParam(':username',$username);
+$query_verif_totp->bindParam(':password',$password);
+$query_verif_totp->execute();
+$is_totp = $query_verif_totp->fetch();
+
+
+
+
+
 $query_verif_admin = $pdo->prepare('SELECT * FROM admins WHERE username = :username AND password = :password');
 $query_verif_admin->bindParam(':username',$username);
 $query_verif_admin->bindParam(':password',$password);
 $query_verif_admin->execute();
 
-if (is_connected()){
-    header('Location: ./admin/home_admin.php');
-}
+
+
 
 
 
 if (!empty($_POST['username']) && !empty($_POST['password'])){
+
+    
     if ($query_verif_user->rowCount()>0 && $query_verif_admin->rowCount() == 0){
-        session_start();
-        $_SESSION['connected'] = $username;
-        header('Location: ./users/home_users.php');
-        exit;
+
+
+        
+        if (implode($is_totp) === 'oui'){
+            session_start();
+            $_SESSION['connected'] = $username;
+            header('Location: ./users/totp.php');
+            exit();
+        }
+        elseif (implode($is_totp) === 'non'){
+            session_start();
+            $_SESSION['connected'] = $username;
+            header('Location: ./users/home_users.php');
+            exit;
+        }
+
     }
     elseif ($query_verif_admin->rowCount() > 0 && $query_verif_user->rowCount() == 0){
         session_start();
@@ -60,7 +83,6 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
 
     }
     elseif ($query_verif_user->rowCount() == 0 && $query_verif_admin->rowCount() == 0){
-        echo "<script type='text/javascript'>alert(l identifiant et le mot de passe ne correspondent pas);</script>";
         echo "<script type='text/javascript'>alert('l\'identifiant et le mot de passe ne correspondent pas');</script>";
     }
 }
@@ -76,11 +98,16 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
     <title>Document</title>
 </head>
 <body>
-<form action="" method="post">
+<form action="login.php" method="post">
         <input type="username" placeholder="username" name ="username">
         <input type="password"placeholder="password" name="password">
         <button action="submit" name="connexion">login</button><br>
+       
+
+
+
         <button name="home">home</button>
+        
     </form>
 </body>
 </html>
@@ -90,3 +117,4 @@ if (!empty($_POST['username']) && !empty($_POST['password'])){
 if (isset($_POST['home'])){
     header('Location: index.php');
 }
+?>
