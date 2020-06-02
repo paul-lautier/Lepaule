@@ -32,34 +32,29 @@ $pdo = new PDO(
 
 
 
+$query_get_email = $pdo->prepare('SELECT email FROM users WHERE username = :username');
+$query_get_email->bindParam(':username',$username);
+$query_get_email->execute();
+$email = implode($query_get_email->fetch());
+
 if(!isset($_SESSION['connected'])){
     header('Location: ../login.php');
 }
-else{
 
-    $token = rand(1000,9999);
-    $query_save_token = $pdo->prepare("UPDATE totp SET token = :token WHERE email = :email");
-    $query_save_token->bindParam(':token',$token);
-    $query_save_token->bindParam(':email',$email);
-    $query_save_token->execute();
-}
+
 
 
 
         
 
 
-$query_get_email = $pdo->prepare('SELECT email FROM users WHERE username = :username');
-$query_get_email->bindParam(':username',$username);
-$query_get_email->execute();
-$email = implode($query_get_email->fetch());
 
 
-$vide ='';
+
 
 
 // $objet = 'token de sécurité pour la connexion au site de lépaule';
-// $message = "Votre token de sécurité est : " . $token;
+//$message = "Votre token de sécurité est : " . $token;
 // $headers = 'From: lepaule.ynov.com';
 // var_dump($message);
 // mail(implode($email),$objet,$message,$headers);
@@ -77,8 +72,10 @@ $vide ='';
 <body>
 
 <form action="totp.php" method="post">
+
+    <button name="create_token">générer token</button>
     <input type="text" name="enter_token" placeholder="token">
-    <button name="login">login</button>
+    <button name="login" type="submit">login</button>
 
 </form>
 
@@ -87,16 +84,30 @@ $vide ='';
 </html>
 
 <?php   
+    
 
-if(isset($_POST['login'])){
+if(isset($_POST['create_token'])){
+    $token = rand(1000,9999);
+    $query_save_token = $pdo->prepare("UPDATE totp SET token = :token WHERE email = :email");
+    $query_save_token->bindParam(':token',$token);
+    $query_save_token->bindParam(':email',$email);
+    $query_save_token->execute();
+}
+
+
+if(isset($_POST["login"])){
+
     $token_user = htmlspecialchars($_POST['enter_token']);
+
 
     $query_get_token = $pdo->prepare("SELECT token FROM totp WHERE email = :email");
     $query_get_token->bindParam(':email',$email);
     $query_get_token->execute();
-    $token_server = implode($query_get_token->fetch());
-        
-    if ($token_user == $token_server){
+    $token_server = $query_get_token->fetch();
+
+
+
+    if($token_user == implode($token_server)){
 
         $query_delete_token = $pdo->prepare("UPDATE totp SET token = 0 WHERE email = :email");
         $query_delete_token->bindParam(':email',$email);
@@ -107,9 +118,10 @@ if(isset($_POST['login'])){
     }
     else{
         echo("le token de sécurité n'est pas valide");
+        
     }
 }
-var_dump($token_user);
-var_dump($token_server);
+
+
 
 ?>
