@@ -1,8 +1,16 @@
 <?php 
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+
 require '../function/connexion_test.php';
 require '../function/kill_session.php';
 session_start();
 $username = $_SESSION['connected'];
+
+if(!isset($_SESSION['connected'])){
+    header('Location: ../login.php');
+}
+
 ?>
 
 
@@ -37,27 +45,8 @@ $query_get_email->bindParam(':username',$username);
 $query_get_email->execute();
 $email = implode($query_get_email->fetch());
 
-if(!isset($_SESSION['connected'])){
-    header('Location: ../login.php');
-}
 
 
-
-
-
-        
-
-
-
-
-
-
-
-// $objet = 'token de sécurité pour la connexion au site de lépaule';
-//$message = "Votre token de sécurité est : " . $token;
-// $headers = 'From: lepaule.ynov.com';
-// var_dump($message);
-// mail(implode($email),$objet,$message,$headers);
 
 
 
