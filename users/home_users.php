@@ -31,7 +31,6 @@ if (isset($_POST['logout'])){
     header('Location: ../index.php');
 }
 
-
 if (isset($_POST['profile'])){
     header('Location: profile_users.php');
 }

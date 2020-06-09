@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$username = $_SESSION['connected'];
 
 $database_host = 'localhost';
 $database_port = '3306';
@@ -29,7 +29,7 @@ require '../function/connexion_test.php';
 //     header('Location: connexion.php');
 // }
 
-$username = $_SESSION['connected'];
+
 
 $querry_get_info = $pdo->prepare("SELECT email FROM users WHERE username = :username");
 $querry_get_info->bindParam(':username',$username);
@@ -70,11 +70,12 @@ $vide = '';
         <button name="sup_compte">supprimer votre compte</button>
         <?php if($is_totp === 'non'){ echo("<button name='totp'>activer l'authentification à deux facteurs</button>");}
         else{ echo("<button name='no_totp'>désactiver l'authentification à deux facteurs</button>");}?>
+        <button name="create_sub">crée un sub</button>
+        <button name="manage_sub">gérer vos subs</button>
         <button name="home">home</button>
 
     </form>
-<a href="./change_pass.php"></a><br>
-<a href="./sup_compte.php"></a>
+
     
 </body>
 </html>
@@ -86,6 +87,15 @@ $vide = '';
 if (isset($_POST['change_pass'])){
     header('Location: change_pass.php');
 }
+
+if (isset($_POST['create_sub'])){
+    header('Location: ../subs/create_sub.php');
+}
+
+if (isset($_POST['manage_sub'])){
+    header('Location: ../subs/users_manage_subs.php');
+}
+
 
 if (isset($_POST['sup_compte'])){
     header('Location: sup_compte.php');
