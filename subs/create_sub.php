@@ -56,11 +56,21 @@ $description_sub = $_POST['description_sub'];
 $sub_name = $_POST['sub_name'];
 
 if(isset($_POST['create_sub'])){
-    $query_add_sub = $pdo->prepare("INSERT INTO subs (sub_name, description_sub, createur) VALUES (:sub_name, :description_sub, :createur) ");
+    
+    $query_add_sub = $pdo->prepare("INSERT INTO subs (sub_name, description_sub, createur, modos) VALUES (:sub_name, :description_sub, :createur, :modo)");
     $query_add_sub->bindParam(':sub_name',$sub_name);
     $query_add_sub->bindParam(':description_sub',$description_sub);
     $query_add_sub->bindParam(':createur',$username);
+    $query_add_sub->bindParam(':modo',$username);
     $query_add_sub->execute();
+
+    $un = 1;
+    $query_add_modo = $pdo->prepare("UPDATE users SET is_modo = :modo WHERE username = :username");
+    $query_add_modo->bindParam(':modo',$un);
+    $query_add_modo->bindParam(':username',$username);
+    $query_add_modo->execute();
+
+
     echo "<script type='text/javascript'>alert('le sub a bien été crée');</script>";
 }
 ?>

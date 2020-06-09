@@ -25,9 +25,9 @@ $pdo = new PDO(
 
 require '../function/connexion_test.php';
 
-// if (!is_connected()){
-//     header('Location: connexion.php');
-// }
+ if (!is_connected()){
+     header('Location: connexion.php');
+ }
 
 
 
@@ -46,43 +46,6 @@ $is_totp = implode($querry_get_totp->fetch());
 $set_totp = 'oui';
 $del_totp = 'non';
 $vide = '';
-?>
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pol Emploie</title>
-</head>
-<body>
-    nom d'utilisateur : <?php echo $username?><br>
-    addresse email : <?php echo implode($email)?><br>
-
-
-
-    <form action="" method="post">
-        <button name="change_pass">changer son mot de passe</button>
-        <button name="sup_compte">supprimer votre compte</button>
-        <?php if($is_totp === 'non'){ echo("<button name='totp'>activer l'authentification à deux facteurs</button>");}
-        else{ echo("<button name='no_totp'>désactiver l'authentification à deux facteurs</button>");}?>
-        <button name="create_sub">crée un sub</button>
-        <button name="manage_sub">gérer vos subs</button>
-        <button name="home">home</button>
-
-    </form>
-
-    
-</body>
-</html>
-
-<?php
-
-
 
 if (isset($_POST['change_pass'])){
     header('Location: change_pass.php');
@@ -140,4 +103,47 @@ if (isset($_POST['no_totp'])){
 
     echo "<script type='text/javascript'>alert('le double authantification est maitenant désactivé');</script>";
 }
+
+
+
+$query_is_modo = $pdo->prepare('SELECT is_modo from users where username = :username');
+$query_is_modo->BindParam(':username',$username);
+$query_is_modo->execute();
+$is_modo = implode($query_is_modo->fetch());
+
+
 ?>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pol Emploie</title>
+</head>
+<body>
+    nom d'utilisateur : <?php echo $username?><br>
+    addresse email : <?php echo implode($email)?><br>
+
+
+
+    <form action="" method="post">
+        <button name="change_pass">changer son mot de passe</button>
+        <button name="sup_compte">supprimer votre compte</button>
+        <?php if($is_totp === 'non'){ echo("<button name='totp'>activer l'authentification à deux facteurs</button>");}
+        else{ echo("<button name='no_totp'>désactiver l'authentification à deux facteurs</button>");}?>
+        <button name="create_sub">crée un sub</button>
+        <button name="home">home</button>
+    </form>
+
+
+    <?php if($is_modo === '1'){echo("<form action='' method='post'><button name='manage_sub'>gérer vos subs</button></form>");}?>
+
+
+    
+</body>
+</html>
