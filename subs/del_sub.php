@@ -27,8 +27,13 @@ $pdo = new PDO(
 );
 $username = $_SESSION['connected'];
 
-$query_is_modo = $pdo->prepare('SELECT is_modo from users where username = :username');
-$query_is_modo->BindParam(':username',$username);
+$querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
+$querry_get_id->bindParam(':username',$username);
+$querry_get_id->execute();
+$user_id = implode($querry_get_id->fetch());
+
+$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
+$query_is_modo->BindParam(':users_id',$user_id);
 $query_is_modo->execute();
 $is_modo = $query_is_modo->fetch();
 
