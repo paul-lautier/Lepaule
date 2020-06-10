@@ -64,7 +64,7 @@ if (isset($_POST['sup_compte'])){
     header('Location: sup_compte.php');
 }
 if (isset($_POST['home'])){
-    header('Location: home_users.php');
+    header('Location: ./home_users.php');
 }
 if (isset($_POST['totp'])){
     $query_add_totp = $pdo->prepare("UPDATE users SET is_totp = :new_totp WHERE username = :username");
@@ -104,12 +104,20 @@ if (isset($_POST['no_totp'])){
     echo "<script type='text/javascript'>alert('le double authantification est maitenant désactivé');</script>";
 }
 
+$querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
+$querry_get_id->bindParam(':username',$username);
+$querry_get_id->execute();
+$user_id = implode($querry_get_id->fetch());
 
-
-$query_is_modo = $pdo->prepare('SELECT is_modo from users where username = :username');
-$query_is_modo->BindParam(':username',$username);
+$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
+$query_is_modo->BindParam(':users_id',$user_id);
 $query_is_modo->execute();
 $is_modo = implode($query_is_modo->fetch());
+
+$query_is_createur = $pdo->prepare('SELECT * FROM createur_details WHERE users_id = :users_id');
+$query_is_createur->BindParam(':users_id',$user_id);
+$query_is_createur->execute();
+$is_createur = implode($query_is_createur->fetch());
 
 
 ?>
@@ -141,7 +149,7 @@ $is_modo = implode($query_is_modo->fetch());
     </form>
 
 
-    <?php if($is_modo === '1'){echo("<form action='' method='post'><button name='manage_sub'>gérer vos subs</button></form>");}?>
+    <?php if($is_modo === '1' or $query_is_createur->rowCount() > '0'){echo("<form action='' method='post'><button name='manage_sub'>gérer vos subs</button></form>");}?>
 
 
     
