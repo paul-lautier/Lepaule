@@ -1,61 +1,7 @@
 <?php
-$database_host = 'localhost';
-$database_port = '3306';
-$database_dbname = 'lepaule';
-$database_user = 'root';
-$database_password = 'Paul@123';
-$database_charset = 'UTF8';
-$database_options = [
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-];
-
-$pdo = new PDO(
-    'mysql:host=' . $database_host .
-    ';port=' . $database_port .
-    ';dbname=' . $database_dbname .
-    ';charset=' . $database_charset,
-    $database_user,
-    $database_password,
-    $database_options
-);
-
-?>
-	
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Register entreprise</title>
-		<link rel="stylesheet" href="style.css">
-	</head>
-	<body>
-
-	<form action="" method="post">
+require './bdd.php';
 
 
-
-  	  <input type="text" name="username" placeholder="Username"><br>
-  	
-	  <input type="email" name="email" placeholder="Email"><br>
-
-	  <input type="date" name="birthdate" placeholder="date de naissance"><br>
-		
-  	  <input type="password" name="password_1" placeholder="Password"><br>
-  	
-  	  <input type="password" name="password_2" placeholder="Verify Password"><br>
-
-	  <button type="submit" name="connexion">create account</button><br>
-	
-	  <button name="home">home</button> 
-
-  	
-	</form>
-	
-	</body>
-</html>
-
-<?php
 
 if (isset($_POST['home'])){
 	header('Location: index.php');
@@ -109,3 +55,36 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["birthda
 
 
 ?>
+	
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Register entreprise</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+
+	<form action="" method="post">
+
+
+
+  	  <input type="text" name="username" placeholder="Username"><br>
+  	
+	  <input type="email" name="email" placeholder="Email"><br>
+
+	  <input type="date" name="birthdate" placeholder="date de naissance"><br>
+		
+  	  <input type="password" name="password_1" placeholder="Password"><br>
+  	
+  	  <input type="password" name="password_2" placeholder="Verify Password"><br>
+
+	  <button type="submit" name="connexion">create account</button><br>
+	
+	  <button name="home">home</button> 
+
+  	
+	</form>
+	
+	</body>
+</html>
