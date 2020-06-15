@@ -129,7 +129,7 @@ $is_createur = implode($query_is_createur->fetch());
     </form>
 
 
-    <?php if($is_modo === '1' or $query_is_createur->rowCount() > '0'){echo("<form action='' method='post'><button name='manage_sub'>gérer vos subs</button></form>");}?>
+    <?php if($query_is_createur->rowCount() !== 0){echo("<form action='' method='post'><button name='manage_sub'>gérer vos subs</button></form>");}?>
 
 
     

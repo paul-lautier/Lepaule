@@ -18,12 +18,22 @@ $query_is_modo->BindParam(':users_id',$user_id);
 $query_is_modo->execute();
 $is_modo = $query_is_modo->fetch();
 
-$query_sub_name = $pdo->prepare('SELECT sub_name from subs where createur = :username');
+$query_sub_name = $pdo->prepare('SELECT * from subs where createur = :username');
 $query_sub_name->BindParam(':username',$username);
 $query_sub_name->execute();
+$fetch_sub = $query_sub_name->fetchAll();
 
-$query_compte_is_modo = $pdo->prepare('SELECT ')
+if(isset($_GET["delete"]) and !empty($_GET["delete"])){
+    $sub_id = (int) $_GET["delete"];
 
+    $sub_delete = $pdo->prepare('DELETE FROM subs WHERE sub_id = :sub_id');
+    $sub_delete->bindParam(':sub_id',$sub_id);
+    $sub_delete->execute();
+
+
+    header('Location: del_sub.php');
+
+}
 
 ?>
 
@@ -36,41 +46,26 @@ $query_compte_is_modo = $pdo->prepare('SELECT ')
 <body>
 
 
-<?php echo 'nom de vos subs :';
-while($sub1 = $query_sub_name->fetch()){
-    echo '<tr>';
-    
-    foreach($sub1 as $sub_name){
-        echo '<tr>'.' '.$sub_name.' '. '|'.'<tr>';
+    <table>
+    <tr>
 
-    }
+    <th>nom du sub :</th>
+    <th>supprimer:</th>
+    </tr>
+    <?php 
+    foreach($fetch_sub as $sub){?>
 
-    echo '</tr>';
-    }
-echo '</br>';
+    <tr>
+        <td> <?= $sub["sub_name"] ;?> </td>
+        <td><a href="del_sub.php?delete=<?= $sub["sub_id"]; ?>">supprimer</a></td>
+    </tr>
 
+    <?php } ?>
 
-if(isset($_POST['del_sub'])){
-   
-    $a_suppr = $_POST['a_suppr'];
-    $query_del = $pdo->prepare("DELETE FROM subs WHERE sub_name = :a_suppr");
-    $query_del->bindParam(':a_suppr',$a_suppr);
-    $query_del->execute();
-    header("Refresh:0");
-    
-}
-if(isset($_POST['home'])){
-    header('Location: ../users/home_users.php');
-}
+    <form action="users_manage_subs.php" >
+        <button name="home">home</button>
+    </form>
 
-?>
-   
-
-<form action="del_sub.php" method="post">
-    <input type="text" placeholder="sub a supprimer" name="a_suppr">
-    <button type="submit" name="del_sub">supprimer le sub</button>
-    <button name="home">home</button>
-</form>
-    
+</table>
 </body>
 </html>
