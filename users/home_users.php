@@ -21,6 +21,9 @@ if (isset($_POST['voir_offres'])){
 if (isset($_POST['subs'])){
     header('Location: ./content.php');
 }
+if (isset($_POST['posts'])){
+    header('Location: ./posts.php');
+}
 ?>
 
 <!doctype html>
@@ -36,7 +39,7 @@ if (isset($_POST['subs'])){
         <button name="logout">log out</button>
         <button name="profile">accéder au profile</button>
         <button name="subs">afficher les subs</button>
-
+        <button name="posts">crée une post</button>
     </form>
 
 

@@ -44,6 +44,9 @@ $query_already_follow->execute();
         <?php } ?>
 
     </table>
+    <form action="home_users.php">
+        <button>home</button>
+    </form>
 
 
 </body>
