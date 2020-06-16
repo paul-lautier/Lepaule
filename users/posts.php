@@ -12,16 +12,10 @@ $querry_get_id->bindParam(':username',$username);
 $querry_get_id->execute();
 $user_id = implode($querry_get_id->fetch());
 
-$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
-$query_is_modo->BindParam(':users_id',$user_id);
-$query_is_modo->execute();
-$is_modo = $query_is_modo->fetch();
-
-$query_sub_name = $pdo->prepare('SELECT * from subs where createur = :username');
-$query_sub_name->BindParam(':username',$username);
-$query_sub_name->execute();
-
-$fetch_sub = $query_sub_name->fetchAll();
+$query_sub_details = $pdo->prepare('SELECT s.sub_name FROM subs s join subs_details sd on (s.sub_id = sd.sub_id) where sd.users_id =:user_id');
+$query_sub_details->BindParam(':user_id',$user_id);
+$query_sub_details->execute();
+$fetch_sub = $query_sub_details->fetchAll();
 
 
 
@@ -55,7 +49,7 @@ $fetch_sub = $query_sub_name->fetchAll();
     <?php 
     
     ?>
-    <form action="select_subs.php" method="post">
+    <form action="home_users.php" method="post">
         <button name="home">home</button>
     </form>
     

@@ -20,10 +20,6 @@ $query_verif_totp->bindParam(':password',$password);
 $query_verif_totp->execute();
 $is_totp = $query_verif_totp->fetch();
 
-
-
-
-
 $query_verif_admin = $pdo->prepare('SELECT * FROM admins WHERE username = :username AND password = :password');
 $query_verif_admin->bindParam(':username',$username);
 $query_verif_admin->bindParam(':password',$password);

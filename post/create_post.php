@@ -56,6 +56,9 @@ if(isset($_POST['submit']) and !empty($_POST['post_title']) and !empty($_POST['p
         <input type="checkbox" name="mature_content" value="1"/> contenue mature <br/><br/>
         <button type="submit" name="submit">crée le post</button>
     </form>
+    <form action="../users/home_users.php">
+        <button>home</button>
+    </form>
     
 </body>
 </html>
