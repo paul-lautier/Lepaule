@@ -22,7 +22,7 @@ if (isset($_POST['subs'])){
     header('Location: ./content.php');
 }
 if (isset($_POST['posts'])){
-    header('Location: ./posts.php');
+    header('Location: ../post/posts.php');
 }
 ?>
 

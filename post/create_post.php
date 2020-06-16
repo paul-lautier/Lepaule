@@ -6,7 +6,8 @@ if (!is_connected()){
 }
 require '../bdd.php';
 $username = $_SESSION['connected'];
-$sub_id = $_GET['id'];
+$sub_id = (int) $_GET['id'];
+
 
 $querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
 $querry_get_id->bindParam(':username',$username);
@@ -38,6 +39,7 @@ if(isset($_POST['submit']) and !empty($_POST['post_title']) and !empty($_POST['p
     $query_link_post->bindParam(':sub_id',$sub_id);
     $query_link_post->bindParam('users_id',$user_id);
     $query_link_post->execute();
+
 
 }
 ?>

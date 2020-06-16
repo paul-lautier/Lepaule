@@ -127,6 +127,9 @@ $is_createur = implode($query_is_createur->fetch());
         <button name="create_sub">crée un sub</button>
         <button name="home">home</button>
     </form>
+    <form action="../post/del_post.php">
+        <button>supprimez vos post</button>
+    </form>
 
 
     <?php if($query_is_createur->rowCount() !== 0){echo("<form action='' method='post'><button name='manage_sub'>gérer vos subs</button></form>");}?>

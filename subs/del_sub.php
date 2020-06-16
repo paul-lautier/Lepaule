@@ -26,6 +26,14 @@ $fetch_sub = $query_sub_name->fetchAll();
 if(isset($_GET["delete"]) and !empty($_GET["delete"])){
     $sub_id = (int) $_GET["delete"];
 
+    $sub_delete_link = $pdo->prepare('DELETE FROM subs_details WHERE sub_id = :sub_id');
+    $sub_delete_link->bindParam(':sub_id',$sub_id);
+    $sub_delete_link->execute();
+
+    $createur_delete_link = $pdo->prepare('DELETE FROM createur_details WHERE sub_id = :sub_id');
+    $createur_delete_link->bindParam(':sub_id',$sub_id);
+    $createur_delete_link->execute();
+
     $sub_delete = $pdo->prepare('DELETE FROM subs WHERE sub_id = :sub_id');
     $sub_delete->bindParam(':sub_id',$sub_id);
     $sub_delete->execute();

@@ -4,7 +4,7 @@ require '../bdd.php';
 if(!isset($_SESSION['connected'])){
     header('Location: ../login.php');
 }
-
+$username = $_SESSION['connected'];
 if(isset($_POST['del_sub'])){
 
     $query_compte_is_créateur = $pdo->prepare('SELECT createur FROM subs WHERE createur = :username');
@@ -13,6 +13,11 @@ if(isset($_POST['del_sub'])){
     if($query_compte_is_créateur->rowCount() == 0){
         header('Location: ../users/profile_users.php');
     }
+    else{
+        header('Location: ./del_sub.php');
+    }
+        
+    
    
 }
 if(isset($_POST['manage_modo'])){

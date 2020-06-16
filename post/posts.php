@@ -1,21 +1,32 @@
 <?php
 session_start();
-require '../function/connexion_test.php';
-if (!is_connected()){
-    header('Location: ../connexion.php');
+if(!isset($_SESSION['connected'])){
+    header('Location: ../login.php');
 }
 require '../bdd.php';
+
 $username = $_SESSION['connected'];
+
+if(isset($_POST['home'])){
+    header('Location: ./users_manage_subs.php');
+}
 
 $querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
 $querry_get_id->bindParam(':username',$username);
 $querry_get_id->execute();
 $user_id = implode($querry_get_id->fetch());
 
-$query_sub_details = $pdo->prepare('SELECT s.sub_name FROM subs s join subs_details sd on (s.sub_id = sd.sub_id) where sd.users_id =:user_id');
-$query_sub_details->BindParam(':user_id',$user_id);
-$query_sub_details->execute();
-$fetch_sub = $query_sub_details->fetchAll();
+$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
+$query_is_modo->BindParam(':users_id',$user_id);
+$query_is_modo->execute();
+$is_modo = $query_is_modo->fetch();
+
+$query_sub_name = $pdo->prepare('SELECT * from subs where createur = :username');
+$query_sub_name->BindParam(':username',$username);
+$query_sub_name->execute();
+
+$fetch_sub = $query_sub_name->fetchAll();
+
 
 
 
@@ -39,7 +50,7 @@ $fetch_sub = $query_sub_details->fetchAll();
 
         <tr>
             <td> <?= $sub["sub_name"] ;?> </td>
-            <td><a href="../post/create_post.php?id=<?= $sub["sub_id"]; ?>">crée post</a></td>
+            <td><a href="create_post.php?id=<?= $sub["sub_id"]; ?>">crée post</a></td>
         </tr>
 
         <?php } ?>
