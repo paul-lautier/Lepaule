@@ -5,9 +5,9 @@ $username = $_SESSION['connected'];
 require '../bdd.php';
 require '../function/connexion_test.php';
 
- if (!is_connected()){
-     header('Location: connexion.php');
- }
+if (!is_connected()){
+    header('Location: connexion.php');
+}
 
 
 
@@ -21,31 +21,45 @@ $querry_get_totp->bindParam(':username',$username);
 $querry_get_totp->execute();
 $is_totp = implode($querry_get_totp->fetch());
 
+$querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
+$querry_get_id->bindParam(':username',$username);
+$querry_get_id->execute();
+$user_id = implode($querry_get_id->fetch());
 
+$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
+$query_is_modo->BindParam(':users_id',$user_id);
+$query_is_modo->execute();
+$is_modo = implode($query_is_modo->fetch());
 
 $set_totp = 'oui';
 $del_totp = 'non';
-$vide = '';
 
 if (isset($_POST['change_pass'])){
     header('Location: change_pass.php');
 }
 
-if (isset($_POST['create_sub'])){
-    header('Location: ../subs/create_sub.php');
-}
+if (isset($_POST['manage_content'])){
+    $query_is_poster = $pdo->prepare("SELECT * from post where author = :username");
+    $query_is_poster->bindParam(':username',$username);
+    $query_is_poster->execute();
 
-if (isset($_POST['manage_sub'])){
-    header('Location: ../subs/users_manage_subs.php');
-}
+    $query_is_createur = $pdo->prepare('SELECT * FROM createur_details WHERE users_id = :users_id');
+    $query_is_createur->BindParam(':users_id',$user_id);
+    $query_is_createur->execute();
 
+    if($query_is_poster->rowCount() == 0 and $query_is_createur->rowCount() == 0){
+        echo "<script type='text/javascript'>alert('vous n'avez posté aucun contenue');</script>";
+    }
+    else{
+        header('Location: ../subs/users_manage_subs.php');
+    }
+    
+}
 
 if (isset($_POST['sup_compte'])){
     header('Location: sup_compte.php');
 }
-if (isset($_POST['home'])){
-    header('Location: ./home_users.php');
-}
+
 if (isset($_POST['totp'])){
     $query_add_totp = $pdo->prepare("UPDATE users SET is_totp = :new_totp WHERE username = :username");
     $query_add_totp->bindParam(':new_totp',$set_totp);
@@ -75,66 +89,88 @@ if (isset($_POST['no_totp'])){
     $query_del_token = $pdo->prepare("DELETE FROM totp WHERE email = :email");
     $query_del_token->bindParam(':email',$user_mail);
     $query_del_token->execute();
-
-
     header("Refresh:0");
     exit;
-
-
     echo "<script type='text/javascript'>alert('le double authantification est maitenant désactivé');</script>";
 }
 
-$querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
-$querry_get_id->bindParam(':username',$username);
-$querry_get_id->execute();
-$user_id = implode($querry_get_id->fetch());
 
-$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
-$query_is_modo->BindParam(':users_id',$user_id);
-$query_is_modo->execute();
-$is_modo = implode($query_is_modo->fetch());
-
-$query_is_createur = $pdo->prepare('SELECT * FROM createur_details WHERE users_id = :users_id');
-$query_is_createur->BindParam(':users_id',$user_id);
-$query_is_createur->execute();
-$is_createur = implode($query_is_createur->fetch());
 
 
 ?>
 
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pol Emploie</title>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>L'épaule</title>
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="../assets/css/Profile-Edit-Form-1.css">
+    <link rel="stylesheet" href="../assets/css/Profile-Edit-Form.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/Dark-NavBar-1.css">
+    <link rel="stylesheet" href="../assets/css/Dark-NavBar-2.css">
+    <link rel="stylesheet" href="../assets/css/Dark-NavBar.css">
+    <link rel="stylesheet" href="../assets/css/Search-Input-responsive.css">
 </head>
+
 <body>
-    nom d'utilisateur : <?php echo $username?><br>
-    addresse email : <?php echo implode($email)?><br>
+
+    <nav class="navbar navbar-light navbar-expand-md sticky-top border rounded float-none navigation-clean-button" style="height: 80px;background-color: #37434d;color: #ffffff;">
+        <div class="container-fluid"><a class="navbar-brand" href="home_users.php" style="filter: blur(0px);width: 182px;margin: -18px;">
+        &nbsp;<img data-bs-hover-animate="bounce" src="../assets/img/shoulder_img.png">
+        &nbsp; &nbsp;L'Epaule</a>
+        <button class="navbar-toggler" data-toggle="collapse">
+            <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="float-left float-md-right mt-5 mt-md-0 search-area">
+                <i class="fas fa-search float-left search-icon"></i>
+                <input class="float-left float-sm-right custom-search-input" type="search" placeholder="Type to filter by address" style="padding: 00x;height: 35px;width: 1123px;"></div>
+                <a class="d-xl-flex justify-content-xl-end" style="color: #ffffff;" href="../logout.php">
+                <i class="fa fa-sign-in" style="height: -5px;width: 13px;padding: 4px;"></i>
+                &nbsp; LogOut</a>
+    </nav>
+    <div class="container profile profile-view" id="profile">
+                <div class="col-md-8">
+                    <h1>Profil</h1>
+                    <hr>
+                    <div class="form-row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group"><label>Username</label></div>
+                            <p><?=$username?></p>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group"><label>Email</label></div>
+                            <p><?=implode($email)?></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row">
+
+                        <div class="col-md-12 content-right">
+                            <form action="profile_users.php" method="post">
+                                <button class="btn btn-primary form-btn" name="manage_content">Gérer votre contenu</button>
+                                <?php if($is_totp === 'non'){ echo("<button class='btn btn-primary form-btn' name='totp'>TOTP ON</button>");}
+                                else{ echo("<button class='btn btn-primary form-btn' name='no_totp'>TOTP OFF</button>");}?>
+                                <button class="btn btn-primary form-btn" name="sup_compte">DELETE le compte</button>
+                                <button class="btn btn-primary form-btn" name="change_pass">changer de MDP</button>
+                            </form>
+                        </div>
 
 
-
-    <form action="" method="post">
-        <button name="change_pass">changer son mot de passe</button>
-        <button name="sup_compte">supprimer votre compte</button>
-        <?php if($is_totp === 'non'){ echo("<button name='totp'>activer l'authentification à deux facteurs</button>");}
-        else{ echo("<button name='no_totp'>désactiver l'authentification à deux facteurs</button>");}?>
-        <button name="create_sub">crée un sub</button>
-        <button name="home">home</button>
-    </form>
-    <form action="../post/del_post.php">
-        <button>supprimez vos post</button>
-    </form>
-
-
-    <?php if($query_is_createur->rowCount() !== 0){echo("<form action='' method='post'><button name='manage_sub'>gérer vos subs</button></form>");}?>
-
-
-    
+                    </div>
+                </div>
+            
+        
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/Profile-Edit-Form.js"></script>
 </body>
+
 </html>

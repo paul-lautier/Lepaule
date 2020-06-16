@@ -1,8 +1,6 @@
 <?php
 session_start();
-
 require '../function/connexion_test.php';
-
 if (!is_connected()){
     header('Location: ../connexion.php');
 }

@@ -34,7 +34,7 @@ if(isset($_GET["delete"]) and !empty($_GET["delete"])){
     $post_delete->bindParam(':post_id',$post_id);
     $post_delete->execute();
 
-    header('Location: ../users/profile_users.php');
+    header('Location: ../del_post.php');
 
 }
 

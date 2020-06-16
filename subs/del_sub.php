@@ -13,18 +13,21 @@ $querry_get_id->bindParam(':username',$username);
 $querry_get_id->execute();
 $user_id = implode($querry_get_id->fetch());
 
-$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
-$query_is_modo->BindParam(':users_id',$user_id);
-$query_is_modo->execute();
-$is_modo = $query_is_modo->fetch();
-
 $query_sub_name = $pdo->prepare('SELECT * from subs where createur = :username');
 $query_sub_name->BindParam(':username',$username);
 $query_sub_name->execute();
 $fetch_sub = $query_sub_name->fetchAll();
 
+
+
+
 if(isset($_GET["delete"]) and !empty($_GET["delete"])){
     $sub_id = (int) $_GET["delete"];
+
+    $querry_get_post_id  = $pdo->prepare("SELECT post_id from posts_details where sub_id = :sub_id");
+    $querry_get_post_id->bindParam(':sub_id',$sub_id);
+    $querry_get_post_id->execute();
+    $post_id = implode($querry_get_post_id->fetch());
 
     $sub_delete_link = $pdo->prepare('DELETE FROM subs_details WHERE sub_id = :sub_id');
     $sub_delete_link->bindParam(':sub_id',$sub_id);
@@ -34,11 +37,18 @@ if(isset($_GET["delete"]) and !empty($_GET["delete"])){
     $createur_delete_link->bindParam(':sub_id',$sub_id);
     $createur_delete_link->execute();
 
+    $post_details_delete = $pdo->prepare('DELETE FROM posts_details WHERE post_id = :post_id');
+    $post_details_delete->bindParam(':post_id',$post_id);
+    $post_details_delete->execute();
+
+    $post_delete = $pdo->prepare('DELETE FROM post WHERE post_id = :post_id');
+    $post_delete->bindParam(':post_id',$post_id);
+    $post_delete->execute();
+
     $sub_delete = $pdo->prepare('DELETE FROM subs WHERE sub_id = :sub_id');
     $sub_delete->bindParam(':sub_id',$sub_id);
     $sub_delete->execute();
-
-
+    
     header('Location: del_sub.php');
 
 }
