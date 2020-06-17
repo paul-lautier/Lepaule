@@ -38,6 +38,10 @@ if(isset($_POST['add_sub'])){
 if(isset($_POST['del_posts'])){
     header('Location: ../post/del_post.php'); 
 }
+if(isset($_POST['content'])){
+    header('Location: ../users/content.php'); 
+}
+
 
 
 ?>
@@ -128,6 +132,11 @@ if(isset($_POST['del_posts'])){
                     <div class="box"><i class="fa fa-comment icon"></i>
                         <h3 class="name">Créer un Post</h3>
                         <p class="description">Création d'un post dans une Aisselle, relatif au sujet de cette dernière<br><br></p><form method="post"><button class="btn btn-primary" name="posts">Aller à</button></div>
+                </div>
+                <div class="col-sm-6 col-md-5 col-lg-4 item">
+                    <div class="box"><i class="fa fa-comment icon"></i>
+                        <h3 class="name">Suivre une Aisselle</h3>
+                        <p class="description">suivre l'activité d'une aiselle pour afficher ces posts<br><br></p><form method="post"><button class="btn btn-primary" name="content">Aller à</button></div>
                 </div>
             </div>
             </form>

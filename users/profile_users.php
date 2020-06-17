@@ -44,14 +44,7 @@ if (isset($_POST['change_pass'])){
 
 if (isset($_POST['manage_content'])){
 
-
-    if($query_is_poster->rowCount() == 0 and $query_is_createur->rowCount() == 0){
-        echo "<script type='text/javascript'>alert('vous n'avez posté aucun contenu');</script>";
-    }
-    else{
-        header('Location: ../subs/users_manage_subs.php');
-    }
-    
+    header('Location: ../subs/users_manage_subs.php');
 }
 
 if (isset($_POST['sup_compte'])){
@@ -151,9 +144,7 @@ if (isset($_POST['no_totp'])){
 
                         <div class="col-md-12 content-right">
                             <form action="profile_users.php" method="post">
-                            <?php if($query_is_poster->rowCount() !== 0 or $query_is_createur->rowCount() !== 0){ 
-                                echo '<button class="btn btn-primary form-btn" name="manage_content">Gérer votre contenu</button>';
-                            }?>
+                                <button class="btn btn-primary form-btn" name="manage_content">Gérer votre contenu</button>
                                 <?php if($is_totp === 'non'){ echo("<button class='btn btn-primary form-btn' name='totp'>TOTP ON</button>");}
                                 else{ echo("<button class='btn btn-primary form-btn' name='no_totp'>TOTP OFF</button>");}?>
                                 <button class="btn btn-primary form-btn" name="sup_compte">DELETE le compte</button>

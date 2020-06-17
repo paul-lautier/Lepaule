@@ -88,7 +88,7 @@ if(isset($_GET["delete"]) and !empty($_GET["delete"])){
                     <?php foreach($fetch_post as $post){?>
                         <tr>
                             <td style="font-size: 20px;line-height: 60px;"><?= $post["post_title"] ;?></td>
-                            <td><button class="btn btn-primary active text-center d-block pull-right" type="button" style="height: 61px;background-color: rgb(0,105,217);">><a href="del_post.php?delete=<?= $post["post_id"]; ?>">supprimer</a></button></td>
+                            <td><button class="btn btn-primary active text-center d-block pull-right" type="button" style="height: 61px;background-color: rgb(0,105,217);"><a href="del_post.php?delete=<?= $post["post_id"]; ?>">supprimer</a></button></td>
                         </tr>
                         <?php } ?>
                     </tbody>
