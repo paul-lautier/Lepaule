@@ -26,10 +26,14 @@ $querry_get_id->bindParam(':username',$username);
 $querry_get_id->execute();
 $user_id = implode($querry_get_id->fetch());
 
-$query_is_modo = $pdo->prepare('SELECT is_modo from subs_details where users_id = :users_id');
-$query_is_modo->BindParam(':users_id',$user_id);
-$query_is_modo->execute();
-$is_modo = implode($query_is_modo->fetch());
+$query_is_poster = $pdo->prepare("SELECT * from post where author = :username");
+$query_is_poster->bindParam(':username',$username);
+$query_is_poster->execute();
+
+$query_is_createur = $pdo->prepare('SELECT * FROM createur_details WHERE users_id = :users_id');
+$query_is_createur->BindParam(':users_id',$user_id);
+$query_is_createur->execute();
+
 
 $set_totp = 'oui';
 $del_totp = 'non';
@@ -39,16 +43,10 @@ if (isset($_POST['change_pass'])){
 }
 
 if (isset($_POST['manage_content'])){
-    $query_is_poster = $pdo->prepare("SELECT * from post where author = :username");
-    $query_is_poster->bindParam(':username',$username);
-    $query_is_poster->execute();
 
-    $query_is_createur = $pdo->prepare('SELECT * FROM createur_details WHERE users_id = :users_id');
-    $query_is_createur->BindParam(':users_id',$user_id);
-    $query_is_createur->execute();
 
     if($query_is_poster->rowCount() == 0 and $query_is_createur->rowCount() == 0){
-        echo "<script type='text/javascript'>alert('vous n'avez posté aucun contenue');</script>";
+        echo "<script type='text/javascript'>alert('vous n'avez posté aucun contenu');</script>";
     }
     else{
         header('Location: ../subs/users_manage_subs.php');
@@ -153,7 +151,9 @@ if (isset($_POST['no_totp'])){
 
                         <div class="col-md-12 content-right">
                             <form action="profile_users.php" method="post">
-                                <button class="btn btn-primary form-btn" name="manage_content">Gérer votre contenu</button>
+                            <?php if($query_is_poster->rowCount() !== 0 or $query_is_createur->rowCount() !== 0){ 
+                                echo '<button class="btn btn-primary form-btn" name="manage_content">Gérer votre contenu</button>';
+                            }?>
                                 <?php if($is_totp === 'non'){ echo("<button class='btn btn-primary form-btn' name='totp'>TOTP ON</button>");}
                                 else{ echo("<button class='btn btn-primary form-btn' name='no_totp'>TOTP OFF</button>");}?>
                                 <button class="btn btn-primary form-btn" name="sup_compte">DELETE le compte</button>
@@ -170,7 +170,7 @@ if (isset($_POST['no_totp'])){
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
-    <script src="assets/js/Profile-Edit-Form.js"></script>
+    <!-- <script src="assets/js/Profile-Edit-Form.js"></script> -->
 </body>
 
 </html>

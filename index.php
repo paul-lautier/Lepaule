@@ -64,41 +64,21 @@ $fetch_post = $query_affiche_post->fetchAll();
 <br>
 
 
-    <?php 
+<?php 
     foreach($fetch_post as $post){?>
 
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card mb-4 box-shadow rounded-0">
-                        <div class="card-body">
-                            <h4 class="card-title"><?= $post["post_title"] ;?></h4>
-                            <p class="card-text"><?= $post['content'] ;?></p>
-                    </div>
-                </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><?= $post["post_title"] ;?></h4>
+                <h6 class="text-muted card-subtitle mb-2"></h6>
+                <p class="card-text"><?= $post['content'] ;?></p>
+                <p>par : <?= $post['author'];?></p>
+                <p>sur : <?= $sub_name;?></p>
+            </div>
         </div>
-    </div>
-    </section>
-    
-    
-
-    
-
-        
-    
 
     <?php } ?>
-
-
-
-
-
-
-
-
-
-
+    
     
 </body>
 </html>
