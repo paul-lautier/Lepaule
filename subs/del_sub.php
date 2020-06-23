@@ -29,6 +29,12 @@ if(isset($_GET["delete"]) and !empty($_GET["delete"])){
     $querry_get_post_id->execute();
     $post_id = implode($querry_get_post_id->fetch());
 
+    $query_delete_likes = $pdo->prepare('DELETE FROM likes');
+    $query_delete_likes->execute();
+
+    $query_delete_dislikes = $pdo->prepare('DELETE FROM dislikes');
+    $query_delete_dislikes->execute();
+
     $sub_delete_link = $pdo->prepare('DELETE FROM subs_details WHERE sub_id = :sub_id');
     $sub_delete_link->bindParam(':sub_id',$sub_id);
     $sub_delete_link->execute();

@@ -26,6 +26,12 @@ $fetch_post = $query_post_name->fetchAll();
 if(isset($_GET["delete"]) and !empty($_GET["delete"])){
     $post_id = (int) $_GET["delete"];
 
+    $query_delete_likes = $pdo->prepare('DELETE FROM likes');
+    $query_delete_likes->execute();
+
+    $query_delete_dislikes = $pdo->prepare('DELETE FROM dislikes');
+    $query_delete_dislikes->execute();
+
     $post_details_delete = $pdo->prepare('DELETE FROM posts_details WHERE post_id = :post_id');
     $post_details_delete->bindParam(':post_id',$post_id);
     $post_details_delete->execute();
