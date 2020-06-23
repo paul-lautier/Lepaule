@@ -14,12 +14,14 @@ if(isset($_GET['action'],$_GET['id'])){
     $avis = $_GET["action"];
     $post_id = $_GET['id'];
 
-    $query_avis_neg = $pdo->prepare('SELECT post_id from dislikes where users_id = :user_id');
+    $query_avis_neg = $pdo->prepare('SELECT post_id from dislikes where users_id = :user_id and post_id = :post_id');
     $query_avis_neg->bindParam(':user_id',$user_id);
+    $query_avis_neg->bindParam(':post_id',$post_id);
     $query_avis_neg->execute();
 
-    $query_avis_pos = $pdo->prepare('SELECT post_id from likes where users_id = :user_id');
+    $query_avis_pos = $pdo->prepare('SELECT post_id from likes where users_id = :user_id and post_id = :post_id');
     $query_avis_pos->bindParam(':user_id',$user_id);
+    $query_avis_pos->bindParam(':post_id',$post_id);
     $query_avis_pos->execute();
 
 
