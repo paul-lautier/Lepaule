@@ -19,6 +19,9 @@ if(isset($_POST['home'])){
 $description_sub = $_POST['description_sub'];
 $sub_name = $_POST['sub_name'];
 
+
+
+
 if(isset($_POST['create_sub'])){
 
     $check_sub_name = $pdo->prepare("SELECT sub_name FROM subs where sub_name = :sub");
@@ -47,8 +50,8 @@ if(isset($_POST['create_sub'])){
         $query_add_créateur->bindParam(':sub_id',$sub_id);
         $query_add_créateur->execute();
     
-    
-        echo "<script type='text/javascript'>alert('le sub a bien été crée');</script>";
+
+        header('Location: ../users/home_users.php');
 
     }
 
