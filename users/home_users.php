@@ -9,9 +9,13 @@ $query_affiche_post = $pdo->prepare('SELECT * FROM post');
 $query_affiche_post->execute();
 $fetch_post = $query_affiche_post->fetchAll();
 
-$query_get_sub_name = $pdo->prepare('SELECT s.sub_name from subs s join posts_details pd on (s.sub_id = pd.sub_id) where pd.post_id');
-$query_affiche_post->execute();
-$sub_name = $query_get_sub_name->fetchAll();
+$querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
+$querry_get_id->bindParam(':username',$username);
+$querry_get_id->execute();
+$user_id = implode($querry_get_id->fetch());
+
+
+
 
 ?>
 
@@ -34,9 +38,9 @@ $sub_name = $query_get_sub_name->fetchAll();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="../assets/css/Search-Input-responsive.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/Article-List.css">
-    <link rel="stylesheet" href="assets/css/project-card.css">
-    <link rel="stylesheet" href="assets/css/Card-Deck.css">
+    <link rel="stylesheet" href="../assets/css/Article-List.css">
+    <link rel="stylesheet" href="../assets/css/project-card.css">
+    <link rel="stylesheet" href="../assets/css/Card-Deck.css">
 </head>
 
 <body>
@@ -60,16 +64,38 @@ $sub_name = $query_get_sub_name->fetchAll();
     </nav>
     <?php 
     foreach($fetch_post as $post){?>
+    <?php
+    $query_get_sub_name = $pdo->prepare('SELECT s.sub_name from subs s join posts_details pd on (s.sub_id = pd.sub_id) where pd.post_id = :post_id');
+    $query_get_sub_name->bindParam(':post_id',$post['post_id']);
+    $query_get_sub_name->execute();
+    $sub_name = $query_get_sub_name->fetchAll();
+
+    $query_compte_avis_pos = $pdo->prepare('SELECT * from likes where post_id = :post_id and users_id = :user_id');
+    $query_compte_avis_pos->bindParam(':post_id',$post['post_id']);
+    $query_compte_avis_pos->bindParam(':user_id',$user_id);
+    $query_compte_avis_pos->execute();
+    $avis_pos = $query_compte_avis_pos->rowCount();
+
+    $query_compte_avis_neg = $pdo->prepare('SELECT * from dislikes where post_id = :post_id and users_id = :user_id');
+    $query_compte_avis_neg->bindParam(':post_id',$post['post_id']);
+    $query_compte_avis_neg->bindParam(':user_id',$user_id);
+    $query_compte_avis_neg->execute();
+    $avis_neg = $query_compte_avis_neg->rowCount();
+
+    $votes = $avis_pos - $avis_neg;
+
+        
+?>
 
         <div class="card">
             <div class="card-body">
-                <a href="../function/avis.php?action=like&id=<?=$post['post_id'];?>"> <i class="fa fa-arrow-up"></i> </a>
-                <a href="../function/avis.php?action=dislike&id=<?=$post['post_id'];?>"> <i class="fa fa-arrow-down"></i><?= $votes;?> </a>
+                <a href="../function/action.php?action=like&id=<?=$post['post_id'];?>"> <i class="fa fa-arrow-up"></i> </a>
+                <a href="../function/action.php?action=dislike&id=<?=$post['post_id'];?>"> <i class="fa fa-arrow-down"></i><?= $votes;?> </a>
                 <h4 class="card-title"><?= $post["post_title"] ;?></h4>
                 <h6 class="text-muted card-subtitle mb-2"></h6>
                 <p class="card-text"><?= $post['content'] ;?></p>
                 <p>par : <?= $post['author'];?></p>
-                <p> sur : <?= $sub_name;?></p>
+                <p>sur : <?= implode($sub_name);?></p>
             </div>
         </div>
 
