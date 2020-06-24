@@ -1,58 +1,61 @@
 <?php
 session_start();
+//vérification de la session
 if(!isset($_SESSION['connected'])){
     header('Location: ../login.php');
 }
-
+//Require de la bdd
 require '../bdd.php';
 
 $username = $_SESSION['connected'];
 
+// récuperer l'id de l'username 
 $querry_get_id = $pdo->prepare('SELECT users_id from users where username = :username');
 $querry_get_id->bindParam(':username',$username);
 $querry_get_id->execute();
 $user_id = implode($querry_get_id->fetch());
 
-if(isset($_POST['home'])){
-    header('Location: ../users/home_users.php');
-}
-$description_sub = $_POST['description_sub'];
-$sub_name = $_POST['sub_name'];
-
-
-
-
 if(isset($_POST['create_sub'])){
 
+    $description_sub = $_POST['description_sub'];
+    $sub_name = $_POST['sub_name'];
+
+    // vérification pour doublon à la création de sub
     $check_sub_name = $pdo->prepare("SELECT sub_name FROM subs where sub_name = :sub");
     $check_sub_name->bindParam(':sub',$sub_name);
     $check_sub_name->execute();
+
+    // add de sub 
+    $query_add_sub = $pdo->prepare("INSERT INTO subs (sub_name, description_sub, createur) VALUES (:sub_name, :description_sub, :createur)");
+    $query_add_sub->bindParam(':sub_name',$sub_name);
+    $query_add_sub->bindParam(':description_sub',$description_sub);
+    $query_add_sub->bindParam(':createur',$username);
+
+    // ajout des infos du créateur dans la table createur_details
+    $query_add_créateur = $pdo->prepare("INSERT INTO createur_details (users_id, sub_id) VALUES (:users_id, :sub_id)");
+    $query_add_créateur->bindParam(':users_id',$user_id);
+    $query_add_créateur->bindParam(':sub_id',$sub_id);
+
+    // récupérer le sub_id des sub ou user est créateur
+    $querry_get_sub_id = $pdo->prepare('SELECT sub_id from subs where createur = :username');
+    $querry_get_sub_id->bindParam(':username',$username);
     
 
+        // check if existe déjà
     if($check_sub_name -> rowCount() > 0){
         echo "<script type='text/javascript'>alert('un sub porte déjà ce nom');</script>";
     }
+    // sinon création de sub 
     else{
-        $query_add_sub = $pdo->prepare("INSERT INTO subs (sub_name, description_sub, createur) VALUES (:sub_name, :description_sub, :createur)");
-        $query_add_sub->bindParam(':sub_name',$sub_name);
-        $query_add_sub->bindParam(':description_sub',$description_sub);
-        $query_add_sub->bindParam(':createur',$username);
+
         $query_add_sub->execute();
 
-        $querry_get_sub_id = $pdo->prepare('SELECT sub_id from subs where createur = :username');
-        $querry_get_sub_id->bindParam(':username',$username);
         $querry_get_sub_id->execute();
         $sub_id = implode($querry_get_sub_id->fetch());
     
-        
-        $query_add_créateur = $pdo->prepare("INSERT INTO createur_details (users_id, sub_id) VALUES (:users_id, :sub_id)");
-        $query_add_créateur->bindParam(':users_id',$user_id);
-        $query_add_créateur->bindParam(':sub_id',$sub_id);
         $query_add_créateur->execute();
     
-
         header('Location: ../users/home_users.php');
-
     }
 
     
